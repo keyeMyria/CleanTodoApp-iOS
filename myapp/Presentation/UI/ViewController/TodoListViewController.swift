@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 protocol TodoListViewInput: class {
     func setTodoesModel(_: TodoesModel)
@@ -19,7 +21,8 @@ class TodoListViewController: UIViewController {
     var presenter: TodoListPresenter?
     var todoes: [TodoModel] = []
     var status: TodoListStatus = .loading
-    
+    fileprivate let disposeBag = DisposeBag()
+
     public func inject(presenter: TodoListPresenter) {
         self.presenter = presenter
     }
@@ -44,10 +47,18 @@ extension TodoListViewController {
     func setupUI() {
         tableView.estimatedRowHeight = 70
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        var button = UIBarButtonItem()
+        button.title = "Add"
+        button.rx.tap.subscribe(onNext: { _ in
+            self.presenter?.onClickAdd()
+        }).disposed(by: disposeBag)
+        self.navigationItem.rightBarButtonItem = button
     }
 }
 
 
+// MARK: TodoListViewInput
 extension TodoListViewController: TodoListViewInput {
     func setTodoesModel(_ todoesModel: TodoesModel) {
         self.todoes = todoesModel.items
@@ -91,6 +102,7 @@ extension TodoListViewController: UITableViewDelegate {
     }
 }
 
+// MARK: TodoCellOutputs
 extension TodoListViewController: TodoCellOutputs {
     func onClickDelete(todo: TodoModel) {
         self.presenter?.onClickDelete(todo)

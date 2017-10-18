@@ -18,6 +18,8 @@ protocol TodoListWireframe: class {
 class TodoListWireframeImpl: TodoListWireframe {
     weak var viewController: TodoListViewController?
     
-    func showNewTodo() {/* 新規投稿画面への遷移実装 */}
+    func showNewTodo() {
+        print("showNewTodo")
+    }
     func showEditTodo() {/* 編集画面への遷移実装 */}
 }

@@ -20,6 +20,7 @@ enum TodoListStatus {
 // MARK: - Interface
 protocol TodoListPresenter {
     func loadTodoes(_ page: Int)
+    func onClickAdd()
     func onClickDone(_ todo: TodoModel)
     func onClickDelete(_ todo: TodoModel)
 }
@@ -49,6 +50,10 @@ class TodoListPresenterImpl: TodoListPresenter {
                     self?.viewInput?.changedStatus(TodoListStatus.error)
                 }, onCompleted: nil, onDisposed: nil)
             .disposed(by: disposeBag)
+    }
+    
+    func onClickAdd() {
+        self.wireframe.showNewTodo()
     }
     
     func onClickDone(_ todo: TodoModel) {
