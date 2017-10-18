@@ -51,9 +51,23 @@ class TodoListPresenterImpl: TodoListPresenter {
             .disposed(by: disposeBag)
     }
     
-    func onClickDone(todo: TodoModel) {
+    func onClickDone(_ todo: TodoModel) {
+        useCase.changeCompleteTodo(todo)
+            .subscribe(onNext: { [weak self] isSuccess in
+                self?.loadTodoes(0)
+            }, onError: { [weak self] error in
+                self?.viewInput?.changedStatus(TodoListStatus.error)
+            }, onCompleted: nil, onDisposed: nil)
+        .disposed(by: disposeBag)
     }
     
-    func onClickDelete(todo: TodoModel) {
+    func onClickDelete(_ todo: TodoModel) {
+        useCase.deleteTodo(todo)
+            .subscribe(onNext: { [weak self] isSuccess in
+                self?.loadTodoes(0)
+                }, onError: { [weak self] error in
+                    self?.viewInput?.changedStatus(TodoListStatus.error)
+            }, onCompleted: nil, onDisposed: nil)
+        .disposed(by: disposeBag)
     }
 }

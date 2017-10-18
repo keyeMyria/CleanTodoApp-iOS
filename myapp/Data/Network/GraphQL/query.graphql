@@ -10,15 +10,3 @@ query AllTodoes {
     }
 }
 
-mutation UpdateTodo($id: ID!, $text: String, $complete: Boolean) {
-    updateTodo(id: $id, text: $text, complete: $complete) {
-        ...TodoDetails
-    }
-}
-
-mutation DeleteTodo($id: ID!) {
-    deleteTodo(id: $id) {
-        ...TodoDetails
-    }
-}
-

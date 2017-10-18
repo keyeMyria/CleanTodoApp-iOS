@@ -11,6 +11,9 @@ import RxSwift
 
 protocol TodoListUseCase {
     func loadTodoes(_ page: Int) -> Observable<TodoesModel>
+    func updateTodo(_ todo: TodoModel) -> Observable<Bool>
+    func changeCompleteTodo(_ todo: TodoModel) -> Observable<Bool>
+    func deleteTodo(_ todo: TodoModel) -> Observable<Bool>
 }
 
 struct TodoListUseCaseImpl: TodoListUseCase {    
@@ -23,5 +26,23 @@ struct TodoListUseCaseImpl: TodoListUseCase {
     func loadTodoes(_ page: Int) -> Observable<TodoesModel> {
         return self.todoRepository.getTodoes(page)
             .map(translator: TodoesTranslater())
+    }
+    
+    func updateTodo(_ todo: TodoModel) -> Observable<Bool> {
+        return self.todoRepository.updateTodo(todo)
+    }
+    
+    func changeCompleteTodo(_ todo: TodoModel) -> Observable<Bool> {
+        return self.todoRepository.updateTodo(
+            TodoModel(
+                id: todo.id,
+                title: todo.title,
+                complete: !todo.complete
+            )
+        )
+    }
+    
+    func deleteTodo(_ todo: TodoModel) -> Observable<Bool> {
+        return self.todoRepository.deleteTodo(todo)
     }
 }

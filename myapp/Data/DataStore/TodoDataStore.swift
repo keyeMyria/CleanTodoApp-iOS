@@ -14,12 +14,16 @@ import Apollo
 protocol TodoDataStore {
     func getAllTodoes(_ page: Int) -> Observable<[TodoDetails]>
 //    func getCompletedTodoes(_ page: Int) -> Observable<TodoesEntity>
+    func updateTodo(_ todo: TodoEntity) -> Observable<Bool>
+    func deleteTodo(_ todo: TodoEntity) -> Observable<Bool>
 }
 
 struct TodoDataStoreImpl: TodoDataStore {
+    var todoesWatcher: GraphQLQueryWatcher<AllTodoesQuery>?
+    
     func getAllTodoes(_ page: Int) -> Observable<[TodoDetails]> {
         return Observable.create({ (observer) -> Disposable in
-            apollo.fetch(query: AllTodoesQuery()) { result, error in
+            apollo.fetch(query: AllTodoesQuery(), cachePolicy: .fetchIgnoringCacheData) { result, error in
                 guard let responseData = result?.data else {
                         observer.onError(AppError.generic)
                         return
@@ -31,19 +35,34 @@ struct TodoDataStoreImpl: TodoDataStore {
             
             return Disposables.create()
         })
-        
-//        let JSON: [String: Any] = [
-//            "items" : []
-//        ]
-//        let mapper = Mapper<TodoesEntity>()
-//        let value: TodoesEntity! = mapper.map(JSON: JSON)
-//
-//        apollo.fetch(query: AllTodoesQuery()) { result, error in
-//            guard let todoes = result?.data?.allTodoes else { return }
-//            print(todoes)
-//        }
-//        return Observable.just(value)
     }
     
-//    func getCompletedTodoes(_ page: Int) -> Observable<TodoesEntity> {}
+    func updateTodo(_ todo: TodoEntity) -> Observable<Bool> {
+        return Observable.create({ (observer) -> Disposable in
+            apollo.perform(mutation: UpdateTodoMutation(id: todo.id, text: todo.title, complete: todo.complete)) { result, error in
+                if (error != nil) {
+                    observer.onError(AppError.generic)
+                    return
+                }
+                observer.onNext(true)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        })
+    }
+    
+    func deleteTodo(_ todo: TodoEntity) -> Observable<Bool> {
+        return Observable.create({ (observer) -> Disposable in
+            apollo.perform(mutation: DeleteTodoMutation(id: todo.id)) { result, error in
+                if (error != nil) {
+                    observer.onError(AppError.generic)
+                    return
+                }
+                observer.onNext(true)
+                observer.onCompleted()
+            }
+            return Disposables.create()
+        })
+    }
 }

@@ -20,11 +20,16 @@ struct TodoesEntity: Mappable {
 }
 
 struct TodoEntity: Mappable {
-    var id: Int!
+    var id: String!
     var title: String!
     var complete: Bool!
     
     init?(map: Map) { }
+    init(model: TodoModel) {
+        self.id = model.id
+        self.title = model.title
+        self.complete = model.complete
+    }
     
     mutating func mapping(map: Map) {
         self.id       <- map["id"]

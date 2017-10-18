@@ -11,6 +11,8 @@ import RxSwift
 
 protocol TodoRepository {
     func getTodoes(_ page: Int) -> Observable<[TodoDetails]>
+    func updateTodo(_ todo: TodoModel) -> Observable<Bool>
+    func deleteTodo(_ todo: TodoModel) -> Observable<Bool>
 }
 
 struct TodoRepositoryImpl: TodoRepository {
@@ -22,6 +24,14 @@ struct TodoRepositoryImpl: TodoRepository {
     
     func getTodoes(_ page: Int) -> Observable<[TodoDetails]> {
         return dataStore.getAllTodoes(page)
+    }
+    
+    func updateTodo(_ todo: TodoModel) -> Observable<Bool> {
+        return dataStore.updateTodo(TodoEntity(model: todo))
+    }
+    
+    func deleteTodo(_ todo: TodoModel) -> Observable<Bool> {
+        return dataStore.deleteTodo(TodoEntity(model: todo))
     }
 }
 

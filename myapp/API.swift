@@ -2,123 +2,6 @@
 
 import Apollo
 
-public final class AllTodoesQuery: GraphQLQuery {
-  public static let operationString =
-    "query AllTodoes {\n  allTodoes {\n    __typename\n    ...TodoDetails\n  }\n}"
-
-  public static var requestString: String { return operationString.appending(TodoDetails.fragmentString) }
-
-  public init() {
-  }
-
-  public struct Data: GraphQLSelectionSet {
-    public static let possibleTypes = ["Query"]
-
-    public static let selections: [GraphQLSelection] = [
-      GraphQLField("allTodoes", type: .nonNull(.list(.nonNull(.object(AllTodo.selections))))),
-    ]
-
-    public var snapshot: Snapshot
-
-    public init(snapshot: Snapshot) {
-      self.snapshot = snapshot
-    }
-
-    public init(allTodoes: [AllTodo]) {
-      self.init(snapshot: ["__typename": "Query", "allTodoes": allTodoes.map { $0.snapshot }])
-    }
-
-    public var allTodoes: [AllTodo] {
-      get {
-        return (snapshot["allTodoes"] as! [Snapshot]).map { AllTodo(snapshot: $0) }
-      }
-      set {
-        snapshot.updateValue(newValue.map { $0.snapshot }, forKey: "allTodoes")
-      }
-    }
-
-    public struct AllTodo: GraphQLSelectionSet {
-      public static let possibleTypes = ["Todo"]
-
-      public static let selections: [GraphQLSelection] = [
-        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
-        GraphQLField("id", type: .nonNull(.scalar(GraphQLID.self))),
-        GraphQLField("text", type: .nonNull(.scalar(String.self))),
-        GraphQLField("complete", type: .nonNull(.scalar(Bool.self))),
-      ]
-
-      public var snapshot: Snapshot
-
-      public init(snapshot: Snapshot) {
-        self.snapshot = snapshot
-      }
-
-      public init(id: GraphQLID, text: String, complete: Bool) {
-        self.init(snapshot: ["__typename": "Todo", "id": id, "text": text, "complete": complete])
-      }
-
-      public var __typename: String {
-        get {
-          return snapshot["__typename"]! as! String
-        }
-        set {
-          snapshot.updateValue(newValue, forKey: "__typename")
-        }
-      }
-
-      public var id: GraphQLID {
-        get {
-          return snapshot["id"]! as! GraphQLID
-        }
-        set {
-          snapshot.updateValue(newValue, forKey: "id")
-        }
-      }
-
-      public var text: String {
-        get {
-          return snapshot["text"]! as! String
-        }
-        set {
-          snapshot.updateValue(newValue, forKey: "text")
-        }
-      }
-
-      public var complete: Bool {
-        get {
-          return snapshot["complete"]! as! Bool
-        }
-        set {
-          snapshot.updateValue(newValue, forKey: "complete")
-        }
-      }
-
-      public var fragments: Fragments {
-        get {
-          return Fragments(snapshot: snapshot)
-        }
-        set {
-          snapshot += newValue.snapshot
-        }
-      }
-
-      public struct Fragments {
-        public var snapshot: Snapshot
-
-        public var todoDetails: TodoDetails {
-          get {
-            return TodoDetails(snapshot: snapshot)
-          }
-          set {
-            snapshot += newValue.snapshot
-          }
-        }
-      }
-    }
-  }
-}
-
 public final class UpdateTodoMutation: GraphQLMutation {
   public static let operationString =
     "mutation UpdateTodo($id: ID!, $text: String, $complete: Boolean) {\n  updateTodo(id: $id, text: $text, complete: $complete) {\n    __typename\n    ...TodoDetails\n  }\n}"
@@ -290,6 +173,123 @@ public final class DeleteTodoMutation: GraphQLMutation {
     }
 
     public struct DeleteTodo: GraphQLSelectionSet {
+      public static let possibleTypes = ["Todo"]
+
+      public static let selections: [GraphQLSelection] = [
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("id", type: .nonNull(.scalar(GraphQLID.self))),
+        GraphQLField("text", type: .nonNull(.scalar(String.self))),
+        GraphQLField("complete", type: .nonNull(.scalar(Bool.self))),
+      ]
+
+      public var snapshot: Snapshot
+
+      public init(snapshot: Snapshot) {
+        self.snapshot = snapshot
+      }
+
+      public init(id: GraphQLID, text: String, complete: Bool) {
+        self.init(snapshot: ["__typename": "Todo", "id": id, "text": text, "complete": complete])
+      }
+
+      public var __typename: String {
+        get {
+          return snapshot["__typename"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var id: GraphQLID {
+        get {
+          return snapshot["id"]! as! GraphQLID
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "id")
+        }
+      }
+
+      public var text: String {
+        get {
+          return snapshot["text"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "text")
+        }
+      }
+
+      public var complete: Bool {
+        get {
+          return snapshot["complete"]! as! Bool
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "complete")
+        }
+      }
+
+      public var fragments: Fragments {
+        get {
+          return Fragments(snapshot: snapshot)
+        }
+        set {
+          snapshot += newValue.snapshot
+        }
+      }
+
+      public struct Fragments {
+        public var snapshot: Snapshot
+
+        public var todoDetails: TodoDetails {
+          get {
+            return TodoDetails(snapshot: snapshot)
+          }
+          set {
+            snapshot += newValue.snapshot
+          }
+        }
+      }
+    }
+  }
+}
+
+public final class AllTodoesQuery: GraphQLQuery {
+  public static let operationString =
+    "query AllTodoes {\n  allTodoes {\n    __typename\n    ...TodoDetails\n  }\n}"
+
+  public static var requestString: String { return operationString.appending(TodoDetails.fragmentString) }
+
+  public init() {
+  }
+
+  public struct Data: GraphQLSelectionSet {
+    public static let possibleTypes = ["Query"]
+
+    public static let selections: [GraphQLSelection] = [
+      GraphQLField("allTodoes", type: .nonNull(.list(.nonNull(.object(AllTodo.selections))))),
+    ]
+
+    public var snapshot: Snapshot
+
+    public init(snapshot: Snapshot) {
+      self.snapshot = snapshot
+    }
+
+    public init(allTodoes: [AllTodo]) {
+      self.init(snapshot: ["__typename": "Query", "allTodoes": allTodoes.map { $0.snapshot }])
+    }
+
+    public var allTodoes: [AllTodo] {
+      get {
+        return (snapshot["allTodoes"] as! [Snapshot]).map { AllTodo(snapshot: $0) }
+      }
+      set {
+        snapshot.updateValue(newValue.map { $0.snapshot }, forKey: "allTodoes")
+      }
+    }
+
+    public struct AllTodo: GraphQLSelectionSet {
       public static let possibleTypes = ["Todo"]
 
       public static let selections: [GraphQLSelection] = [
