@@ -22,6 +22,12 @@
 		135C30BB1F977DE200A479EE /* Translator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135C30BA1F977DE200A479EE /* Translator.swift */; };
 		135C30BD1F977E1600A479EE /* TodoesTranslater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135C30BC1F977E1600A479EE /* TodoesTranslater.swift */; };
 		135C30BF1F977FBC00A479EE /* TodoListPresnenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135C30BE1F977FBC00A479EE /* TodoListPresnenter.swift */; };
+		135D27541F979BBA00A55289 /* schema.json in Resources */ = {isa = PBXBuildFile; fileRef = 135D27531F979BBA00A55289 /* schema.json */; };
+		135D27571F97A54900A55289 /* query.graphql in Resources */ = {isa = PBXBuildFile; fileRef = 135D27561F97A54900A55289 /* query.graphql */; };
+		13CF393B1F97B7FB0009BBAE /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CF393A1F97B7FB0009BBAE /* AppError.swift */; };
+		13CF393D1F97C3390009BBAE /* TodoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CF393C1F97C3390009BBAE /* TodoCell.swift */; };
+		13CF39411F97D2DA0009BBAE /* mutation.graphql in Resources */ = {isa = PBXBuildFile; fileRef = 13CF39401F97D2DA0009BBAE /* mutation.graphql */; };
+		13CF39431F97D3390009BBAE /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CF39421F97D3390009BBAE /* API.swift */; };
 		EDF4D8C866517C5E4AE46762 /* Pods_myapp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D0A24AF569C931F525B1467 /* Pods_myapp.framework */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +68,12 @@
 		135C30BA1F977DE200A479EE /* Translator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translator.swift; sourceTree = "<group>"; };
 		135C30BC1F977E1600A479EE /* TodoesTranslater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoesTranslater.swift; sourceTree = "<group>"; };
 		135C30BE1F977FBC00A479EE /* TodoListPresnenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListPresnenter.swift; sourceTree = "<group>"; };
+		135D27531F979BBA00A55289 /* schema.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = schema.json; sourceTree = "<group>"; };
+		135D27561F97A54900A55289 /* query.graphql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = query.graphql; sourceTree = "<group>"; };
+		13CF393A1F97B7FB0009BBAE /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		13CF393C1F97C3390009BBAE /* TodoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCell.swift; sourceTree = "<group>"; };
+		13CF39401F97D2DA0009BBAE /* mutation.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = mutation.graphql; sourceTree = "<group>"; };
+		13CF39421F97D3390009BBAE /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = API.swift; path = myapp/API.swift; sourceTree = SOURCE_ROOT; };
 		4392F5940851BE08A91111B5 /* Pods-myapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-myapp.release.xcconfig"; path = "Pods/Target Support Files/Pods-myapp/Pods-myapp.release.xcconfig"; sourceTree = "<group>"; };
 		4D0A24AF569C931F525B1467 /* Pods_myapp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_myapp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A83B704A923AA52D6D1E9F1A /* Pods-myapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-myapp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-myapp/Pods-myapp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -123,9 +135,11 @@
 				135C309E1F976C0900A479EE /* Data */,
 				135C309D1F976BFC00A479EE /* Domain */,
 				135C309C1F976BF200A479EE /* Presentation */,
+				13CF39381F97B7C70009BBAE /* Utils */,
 				1356DF881F962E1D00272475 /* Main.storyboard */,
 				1356DF8B1F962E1D00272475 /* Assets.xcassets */,
 				1356DF8D1F962E1D00272475 /* LaunchScreen.storyboard */,
+				135D27531F979BBA00A55289 /* schema.json */,
 				1356DF901F962E1D00272475 /* Info.plist */,
 			);
 			path = myapp;
@@ -272,6 +286,7 @@
 		135C30C41F97812F00A479EE /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				13CF393C1F97C3390009BBAE /* TodoCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -286,8 +301,35 @@
 		135C30C61F9788E700A479EE /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				135D27551F979DAD00A55289 /* GraphQL */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		135D27551F979DAD00A55289 /* GraphQL */ = {
+			isa = PBXGroup;
+			children = (
+				13CF39421F97D3390009BBAE /* API.swift */,
+				135D27561F97A54900A55289 /* query.graphql */,
+				13CF39401F97D2DA0009BBAE /* mutation.graphql */,
+			);
+			path = GraphQL;
+			sourceTree = "<group>";
+		};
+		13CF39381F97B7C70009BBAE /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				13CF39391F97B7E10009BBAE /* Error */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		13CF39391F97B7E10009BBAE /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				13CF393A1F97B7FB0009BBAE /* AppError.swift */,
+			);
+			path = Error;
 			sourceTree = "<group>";
 		};
 		B2D470B7DA582064885DA0C0 /* Pods */ = {
@@ -419,6 +461,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				135D27571F97A54900A55289 /* query.graphql in Resources */,
+				13CF39411F97D2DA0009BBAE /* mutation.graphql in Resources */,
+				135D27541F979BBA00A55289 /* schema.json in Resources */,
 				1356DF8F1F962E1D00272475 /* LaunchScreen.storyboard in Resources */,
 				1356DF8C1F962E1D00272475 /* Assets.xcassets in Resources */,
 				1356DF8A1F962E1D00272475 /* Main.storyboard in Resources */,
@@ -482,12 +527,14 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-myapp/Pods-myapp-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Apollo/Apollo.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Apollo.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
@@ -508,13 +555,16 @@
 				135C30A91F976E4F00A479EE /* TodoListWireframe.swift in Sources */,
 				135C30AE1F9770D500A479EE /* TodoListUseCase.swift in Sources */,
 				135C30A51F976D9000A479EE /* TodoListViewController.swift in Sources */,
+				13CF39431F97D3390009BBAE /* API.swift in Sources */,
 				135C30B91F977A6E00A479EE /* TodoDataStore.swift in Sources */,
 				135C30BD1F977E1600A479EE /* TodoesTranslater.swift in Sources */,
+				13CF393B1F97B7FB0009BBAE /* AppError.swift in Sources */,
 				135C30B61F9777F000A479EE /* TodoEntity.swift in Sources */,
 				135C30A71F976DE200A479EE /* TodoListBuilder.swift in Sources */,
 				135C30B31F97768700A479EE /* TodoRepository.swift in Sources */,
 				135C30BF1F977FBC00A479EE /* TodoListPresnenter.swift in Sources */,
 				135C30B01F97714C00A479EE /* TodoModel.swift in Sources */,
+				13CF393D1F97C3390009BBAE /* TodoCell.swift in Sources */,
 				1356DF851F962E1D00272475 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
