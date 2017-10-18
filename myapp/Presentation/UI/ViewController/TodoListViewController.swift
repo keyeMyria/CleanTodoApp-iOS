@@ -14,8 +14,11 @@ protocol TodoListViewInput: class {
 }
 
 class TodoListViewController: UIViewController {
-
+    @IBOutlet weak var tableView: UITableView!
+    
     var presenter: TodoListPresenter?
+    var todoes: [TodoModel] = []
+    var status: TodoListStatus = .loading
     
     public func inject(presenter: TodoListPresenter) {
         self.presenter = presenter
@@ -24,23 +27,76 @@ class TodoListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupUI()
         self.presenter?.loadTodoes(0)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: indexPathForSelectedRow, animated: true)
+        }
     }
+}
 
+extension TodoListViewController {
+    func setupUI() {
+        tableView.estimatedRowHeight = 70
+        tableView.rowHeight = UITableViewAutomaticDimension
+    }
 }
 
 
 extension TodoListViewController: TodoListViewInput {
     func setTodoesModel(_ todoesModel: TodoesModel) {
-        print(todoesModel)
+        self.todoes = todoesModel.items
+        self.tableView.reloadData()
     }
     
     func changedStatus(_ status: TodoListStatus) {
-        print(status)
+        self.status = status
+        self.tableView.reloadData()
+    }
+}
+
+// MARK: Table view data source
+extension TodoListViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return todoes.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoCell", for: indexPath) as! TodoCell        
+        let todo: TodoModel = todoes[indexPath.row]
+        cell.todo = todo
+        cell.isComplete = todo.complete
+        cell.delegate = self
+        
+        return cell
+    }
+}
+
+// MARK: UITableView Delegate
+extension TodoListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch status {
+        case .normal:
+            // let todo: TodoModel = todoes[indexPath.row]
+            return
+        default:
+            return
+        }
+    }
+}
+
+extension TodoListViewController: TodoCellOutputs {
+    func onClickDelete(todo: TodoModel) {
+        self.presenter?.onClickDelete(todo)
+    }
+    
+    func onClickDone(todo: TodoModel) {
+        self.presenter?.onClickDone(todo)
     }
 }

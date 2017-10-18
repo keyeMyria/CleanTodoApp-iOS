@@ -7,6 +7,10 @@
 //
 
 import UIKit
+import Apollo
+
+let graphQLEndpoint = "https://api.graph.cool/simple/v1/cj8ec79st17ul0124siyjhzff"
+let apollo = ApolloClient(url: URL(string: graphQLEndpoint)!)
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

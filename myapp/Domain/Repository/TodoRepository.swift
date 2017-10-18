@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol TodoRepository {
-    func getTodoes(_ page: Int) -> Observable<TodoesEntity>
+    func getTodoes(_ page: Int) -> Observable<[TodoDetails]>
 }
 
 struct TodoRepositoryImpl: TodoRepository {
@@ -20,7 +20,7 @@ struct TodoRepositoryImpl: TodoRepository {
         self.dataStore = dataStore
     }
     
-    func getTodoes(_ page: Int) -> Observable<TodoesEntity> {
+    func getTodoes(_ page: Int) -> Observable<[TodoDetails]> {
         return dataStore.getAllTodoes(page)
     }
 }

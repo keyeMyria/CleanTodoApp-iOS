@@ -20,4 +20,9 @@ struct TodoModel {
         self.title = entity.title
         self.complete = entity.complete
     }
+    
+    init(fragment: TodoDetails) {
+        self.title = fragment.text
+        self.complete = fragment.complete
+    }
 }

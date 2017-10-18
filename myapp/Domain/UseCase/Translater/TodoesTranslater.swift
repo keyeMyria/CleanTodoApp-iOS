@@ -9,13 +9,13 @@
 import Foundation
 
 struct TodoesTranslater: Translator {
-    typealias Input = TodoesEntity
+    typealias Input = [TodoDetails]
     typealias Output = TodoesModel
     
-    func translate(_ entity: TodoesEntity) throws -> TodoesModel {
+    func translate(_ entity: [TodoDetails]) throws -> TodoesModel {
         var todoesModel: TodoesModel = TodoesModel()
-        entity.items.forEach { rowTodo -> () in
-            let todoModel = TodoModel(entity: rowTodo)
+        entity.forEach { rowTodo -> () in
+            let todoModel = TodoModel(fragment: rowTodo)
             todoesModel.items.append(todoModel)
         }
         return todoesModel
