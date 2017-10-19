@@ -21,8 +21,10 @@ enum TodoListStatus {
 protocol TodoListPresenter {
     func loadTodoes(_ page: Int)
     func onClickAdd()
+    func onClickEdit(_ todo: TodoModel)
     func onClickDone(_ todo: TodoModel)
     func onClickDelete(_ todo: TodoModel)
+    func updateTodo(_ todo: TodoModel, title: String?)
     func createTodo(_ title: String?)
 }
 
@@ -58,6 +60,10 @@ class TodoListPresenterImpl: TodoListPresenter {
         self.viewInput?.showAddAlert()
     }
     
+    func onClickEdit(_ todo: TodoModel) {
+        self.viewInput?.showEditAlert(todo)
+    }
+    
     func onClickDone(_ todo: TodoModel) {
         useCase.changeCompleteTodo(todo)
             .subscribe(onNext: { [weak self] isSuccess in
@@ -83,17 +89,41 @@ class TodoListPresenterImpl: TodoListPresenter {
             self.viewInput?.showToster(message: "タイトルが存在しないため追加できません")
             return
         }
-        if title.count > 0 {
-            self.useCase.createTodo(title, complete: false)
-                .subscribe(onNext: { [weak self] isSuccess in
-                    self?.loadTodoes(0)
-                    self?.viewInput?.showToster(message: "Todoを追加しました")
+        if title.count == 0 {
+            self.viewInput?.showToster(message: "タイトルが空のため追加できません")
+            return
+        }
+        
+        self.useCase.createTodo(title, complete: false)
+            .subscribe(onNext: { [weak self] isSuccess in
+                self?.loadTodoes(0)
+                self?.viewInput?.showToster(message: "Todoを追加しました")
                 }, onError: { [weak self] error in
                     self?.viewInput?.changedStatus(TodoListStatus.error)
                 }, onCompleted: nil, onDisposed: nil)
             .disposed(by: disposeBag)
-        } else {
-            self.viewInput?.showToster(message: "タイトルが空のため追加できません")
+    }
+    
+    func updateTodo(_ todo: TodoModel, title: String?) {
+        guard let title = title else {
+            self.viewInput?.showToster(message: "タイトルが存在しないため変更できません")
+            return
         }
+        if title.count == 0 {
+            self.viewInput?.showToster(message: "タイトルが空のため変更できません")
+            return
+        }
+        
+        useCase.updateTodo(TodoModel(
+            id: todo.id,
+            title: title,
+            complete: todo.complete
+        ))
+            .subscribe(onNext: { [weak self] isSuccess in
+                self?.loadTodoes(0)
+            }, onError: { [weak self] error in
+                    self?.viewInput?.changedStatus(TodoListStatus.error)
+            }, onCompleted: nil, onDisposed: nil)
+        .disposed(by: disposeBag)
     }
 }

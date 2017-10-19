@@ -15,6 +15,7 @@ protocol TodoListViewInput: class {
     func setTodoesModel(_: TodoesModel)
     func changedStatus(_: TodoListStatus)
     func showAddAlert()
+    func showEditAlert(_: TodoModel)
     func showToster(message: String)
 }
 
@@ -86,6 +87,20 @@ extension TodoListViewController: TodoListViewInput {
         self.present(alert, animated:true, completion: nil)
     }
     
+    func showEditAlert(_ todo: TodoModel) {
+        let alert = UIAlertController(title: "Edit Todo", message: "Please input Todo title", preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Update", style: .default) { (alertAction) in
+            let textField = alert.textFields![0] as UITextField
+            self.presenter?.updateTodo(todo, title: textField.text)
+        }
+        alert.addTextField { (textField) in
+            textField.placeholder = "Title"
+            textField.text = todo.title
+        }
+        alert.addAction(action)
+        self.present(alert, animated:true, completion: nil)
+    }
+    
     func showToster(message: String) {
         Toast(text: message).show()
     }
@@ -114,7 +129,8 @@ extension TodoListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch status {
         case .normal:
-            // let todo: TodoModel = todoes[indexPath.row]
+            let todo: TodoModel = todoes[indexPath.row]
+            self.presenter?.onClickEdit(todo)
             return
         default:
             return
