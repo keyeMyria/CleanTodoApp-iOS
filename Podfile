@@ -10,4 +10,6 @@ target 'myapp' do
   pod 'RxCocoa',    '~> 4.0'
   
   pod 'Apollo', '~> 0.7.0'
+  
+  pod 'Toaster'
 end

@@ -9,10 +9,13 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Toaster
 
 protocol TodoListViewInput: class {
     func setTodoesModel(_: TodoesModel)
     func changedStatus(_: TodoListStatus)
+    func showAddAlert()
+    func showToster(message: String)
 }
 
 class TodoListViewController: UIViewController {
@@ -68,6 +71,23 @@ extension TodoListViewController: TodoListViewInput {
     func changedStatus(_ status: TodoListStatus) {
         self.status = status
         self.tableView.reloadData()
+    }
+    
+    func showAddAlert() {
+        let alert = UIAlertController(title: "New Todo", message: "Please input Todo title", preferredStyle: UIAlertControllerStyle.alert)
+        let action = UIAlertAction(title: "Create", style: .default) { (alertAction) in
+            let textField = alert.textFields![0] as UITextField
+            self.presenter?.createTodo(textField.text)
+        }
+        alert.addTextField { (textField) in
+            textField.placeholder = "Title"
+        }
+        alert.addAction(action)
+        self.present(alert, animated:true, completion: nil)
+    }
+    
+    func showToster(message: String) {
+        Toast(text: message).show()
     }
 }
 

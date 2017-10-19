@@ -14,6 +14,7 @@ protocol TodoListUseCase {
     func updateTodo(_ todo: TodoModel) -> Observable<Bool>
     func changeCompleteTodo(_ todo: TodoModel) -> Observable<Bool>
     func deleteTodo(_ todo: TodoModel) -> Observable<Bool>
+    func createTodo(_ title: String, complete: Bool) -> Observable<Bool>
 }
 
 struct TodoListUseCaseImpl: TodoListUseCase {    
@@ -44,5 +45,9 @@ struct TodoListUseCaseImpl: TodoListUseCase {
     
     func deleteTodo(_ todo: TodoModel) -> Observable<Bool> {
         return self.todoRepository.deleteTodo(todo)
+    }
+    
+    func createTodo(_ title: String, complete: Bool) -> Observable<Bool> {
+        return self.todoRepository.createTodo(title, complete: complete)
     }
 }

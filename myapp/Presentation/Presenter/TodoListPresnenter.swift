@@ -23,6 +23,7 @@ protocol TodoListPresenter {
     func onClickAdd()
     func onClickDone(_ todo: TodoModel)
     func onClickDelete(_ todo: TodoModel)
+    func createTodo(_ title: String?)
 }
 
 class TodoListPresenterImpl: TodoListPresenter {
@@ -53,7 +54,8 @@ class TodoListPresenterImpl: TodoListPresenter {
     }
     
     func onClickAdd() {
-        self.wireframe.showNewTodo()
+        // self.wireframe.showNewTodo()
+        self.viewInput?.showAddAlert()
     }
     
     func onClickDone(_ todo: TodoModel) {
@@ -74,5 +76,24 @@ class TodoListPresenterImpl: TodoListPresenter {
                     self?.viewInput?.changedStatus(TodoListStatus.error)
             }, onCompleted: nil, onDisposed: nil)
         .disposed(by: disposeBag)
+    }
+    
+    func createTodo(_ title: String?) {
+        guard let title = title else {
+            self.viewInput?.showToster(message: "タイトルが存在しないため追加できません")
+            return
+        }
+        if title.count > 0 {
+            self.useCase.createTodo(title, complete: false)
+                .subscribe(onNext: { [weak self] isSuccess in
+                    self?.loadTodoes(0)
+                    self?.viewInput?.showToster(message: "Todoを追加しました")
+                }, onError: { [weak self] error in
+                    self?.viewInput?.changedStatus(TodoListStatus.error)
+                }, onCompleted: nil, onDisposed: nil)
+            .disposed(by: disposeBag)
+        } else {
+            self.viewInput?.showToster(message: "タイトルが空のため追加できません")
+        }
     }
 }

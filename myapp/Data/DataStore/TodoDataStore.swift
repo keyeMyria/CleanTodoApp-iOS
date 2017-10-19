@@ -16,6 +16,7 @@ protocol TodoDataStore {
 //    func getCompletedTodoes(_ page: Int) -> Observable<TodoesEntity>
     func updateTodo(_ todo: TodoEntity) -> Observable<Bool>
     func deleteTodo(_ todo: TodoEntity) -> Observable<Bool>
+    func createTodo(_ title: String, complete: Bool) -> Observable<Bool>
 }
 
 struct TodoDataStoreImpl: TodoDataStore {
@@ -55,6 +56,20 @@ struct TodoDataStoreImpl: TodoDataStore {
     func deleteTodo(_ todo: TodoEntity) -> Observable<Bool> {
         return Observable.create({ (observer) -> Disposable in
             apollo.perform(mutation: DeleteTodoMutation(id: todo.id)) { result, error in
+                if (error != nil) {
+                    observer.onError(AppError.generic)
+                    return
+                }
+                observer.onNext(true)
+                observer.onCompleted()
+            }
+            return Disposables.create()
+        })
+    }
+    
+    func createTodo(_ title: String, complete: Bool) -> Observable<Bool> {
+        return Observable.create({ (observer) -> Disposable in
+            apollo.perform(mutation: AddTodoMutation(text: title, complete: complete)) { result, error in
                 if (error != nil) {
                     observer.onError(AppError.generic)
                     return

@@ -5,7 +5,7 @@ fragment TodoDetails on Todo {
 }
 
 query AllTodoes {
-    allTodoes {
+    allTodoes(orderBy: createdAt_DESC) {
         ...TodoDetails
     }
 }

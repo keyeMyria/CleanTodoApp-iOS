@@ -254,9 +254,135 @@ public final class DeleteTodoMutation: GraphQLMutation {
   }
 }
 
+public final class AddTodoMutation: GraphQLMutation {
+  public static let operationString =
+    "mutation AddTodo($text: String!, $complete: Boolean!) {\n  createTodo(text: $text, complete: $complete) {\n    __typename\n    ...TodoDetails\n  }\n}"
+
+  public static var requestString: String { return operationString.appending(TodoDetails.fragmentString) }
+
+  public var text: String
+  public var complete: Bool
+
+  public init(text: String, complete: Bool) {
+    self.text = text
+    self.complete = complete
+  }
+
+  public var variables: GraphQLMap? {
+    return ["text": text, "complete": complete]
+  }
+
+  public struct Data: GraphQLSelectionSet {
+    public static let possibleTypes = ["Mutation"]
+
+    public static let selections: [GraphQLSelection] = [
+      GraphQLField("createTodo", arguments: ["text": GraphQLVariable("text"), "complete": GraphQLVariable("complete")], type: .object(CreateTodo.selections)),
+    ]
+
+    public var snapshot: Snapshot
+
+    public init(snapshot: Snapshot) {
+      self.snapshot = snapshot
+    }
+
+    public init(createTodo: CreateTodo? = nil) {
+      self.init(snapshot: ["__typename": "Mutation", "createTodo": createTodo.flatMap { $0.snapshot }])
+    }
+
+    public var createTodo: CreateTodo? {
+      get {
+        return (snapshot["createTodo"] as? Snapshot).flatMap { CreateTodo(snapshot: $0) }
+      }
+      set {
+        snapshot.updateValue(newValue?.snapshot, forKey: "createTodo")
+      }
+    }
+
+    public struct CreateTodo: GraphQLSelectionSet {
+      public static let possibleTypes = ["Todo"]
+
+      public static let selections: [GraphQLSelection] = [
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+        GraphQLField("id", type: .nonNull(.scalar(GraphQLID.self))),
+        GraphQLField("text", type: .nonNull(.scalar(String.self))),
+        GraphQLField("complete", type: .nonNull(.scalar(Bool.self))),
+      ]
+
+      public var snapshot: Snapshot
+
+      public init(snapshot: Snapshot) {
+        self.snapshot = snapshot
+      }
+
+      public init(id: GraphQLID, text: String, complete: Bool) {
+        self.init(snapshot: ["__typename": "Todo", "id": id, "text": text, "complete": complete])
+      }
+
+      public var __typename: String {
+        get {
+          return snapshot["__typename"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "__typename")
+        }
+      }
+
+      public var id: GraphQLID {
+        get {
+          return snapshot["id"]! as! GraphQLID
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "id")
+        }
+      }
+
+      public var text: String {
+        get {
+          return snapshot["text"]! as! String
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "text")
+        }
+      }
+
+      public var complete: Bool {
+        get {
+          return snapshot["complete"]! as! Bool
+        }
+        set {
+          snapshot.updateValue(newValue, forKey: "complete")
+        }
+      }
+
+      public var fragments: Fragments {
+        get {
+          return Fragments(snapshot: snapshot)
+        }
+        set {
+          snapshot += newValue.snapshot
+        }
+      }
+
+      public struct Fragments {
+        public var snapshot: Snapshot
+
+        public var todoDetails: TodoDetails {
+          get {
+            return TodoDetails(snapshot: snapshot)
+          }
+          set {
+            snapshot += newValue.snapshot
+          }
+        }
+      }
+    }
+  }
+}
+
 public final class AllTodoesQuery: GraphQLQuery {
   public static let operationString =
-    "query AllTodoes {\n  allTodoes {\n    __typename\n    ...TodoDetails\n  }\n}"
+    "query AllTodoes {\n  allTodoes(orderBy: createdAt_DESC) {\n    __typename\n    ...TodoDetails\n  }\n}"
 
   public static var requestString: String { return operationString.appending(TodoDetails.fragmentString) }
 
@@ -267,7 +393,7 @@ public final class AllTodoesQuery: GraphQLQuery {
     public static let possibleTypes = ["Query"]
 
     public static let selections: [GraphQLSelection] = [
-      GraphQLField("allTodoes", type: .nonNull(.list(.nonNull(.object(AllTodo.selections))))),
+      GraphQLField("allTodoes", arguments: ["orderBy": "createdAt_DESC"], type: .nonNull(.list(.nonNull(.object(AllTodo.selections))))),
     ]
 
     public var snapshot: Snapshot

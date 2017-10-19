@@ -13,6 +13,7 @@ protocol TodoRepository {
     func getTodoes(_ page: Int) -> Observable<[TodoDetails]>
     func updateTodo(_ todo: TodoModel) -> Observable<Bool>
     func deleteTodo(_ todo: TodoModel) -> Observable<Bool>
+    func createTodo(_ title: String, complete: Bool) -> Observable<Bool>
 }
 
 struct TodoRepositoryImpl: TodoRepository {
@@ -32,6 +33,10 @@ struct TodoRepositoryImpl: TodoRepository {
     
     func deleteTodo(_ todo: TodoModel) -> Observable<Bool> {
         return dataStore.deleteTodo(TodoEntity(model: todo))
+    }
+    
+    func createTodo(_ title: String, complete: Bool) -> Observable<Bool> {
+        return dataStore.createTodo(title, complete: complete)
     }
 }
 

@@ -12,3 +12,9 @@ mutation DeleteTodo($id: ID!) {
     }
 }
 
+mutation AddTodo($text: String!, $complete: Boolean!) {
+    createTodo(text: $text, complete: $complete) {
+        ...TodoDetails
+    }
+}
+
